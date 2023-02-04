@@ -16,22 +16,18 @@ public class PlayerMovement : MonoBehaviour
 
     // Boolean to keep track of double jump availability
     [SerializeField] private int maxJump;
-    [SerializeField] private bool canJump;
+    [SerializeField] private float airDrag;
     [SerializeField] private bool onGround;
 
     // Player's width and height
-    private float width, height;
-    
+    private int currentJump;
+
     // Start is called before the first frame update
     void Start()
     {
         //Fetch the Rigidbody from the GameObject
         rg = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
-        // Get the player's width and height
-        width = sprite.bounds.size.x;
-        height = sprite.bounds.size.y;
-        //numJump = maxJump;
     }
 
     void Update()
@@ -63,22 +59,24 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("First time jump");
             // If the player is on the ground
-            int currentJump = maxJump;
-            rg.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            currentJump = maxJump;
             currentJump--;
+            rg.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             onGround = false;
 
-            if (Input.GetKeyUp("space") && currentJump > 0) { canJump = true; }
-
-            // If the player has already jumped once and canDoubleJump is true
-            if (Input.GetKeyDown(KeyCode.Space) && canJump)
-            {
-                Debug.Log("second time jump");
-                // Reset the player's velocity
-                currentJump--;
-                if (currentJump < 1) { canJump = false; }
-                rg.AddForce(Vector2.up * secondJumpForce, ForceMode2D.Impulse);
-            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && currentJump >  0 && !onGround)
+        {
+            Debug.Log("second time jump");
+            // Reset the player's velocity
+            currentJump--;
+            rg.AddForce(Vector2.up * secondJumpForce, ForceMode2D.Impulse);
+        }
+        
+        //Land to ground // dragon kick
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            rg.AddForce(Physics.gravity * rg.gravityScale, ForceMode2D.Impulse);
         }
     }
 

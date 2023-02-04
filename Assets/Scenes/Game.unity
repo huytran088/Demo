@@ -787,13 +787,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b0aaf5c805a0fb4d8d8adb130b2458c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  jumpForce: 7
+  speed: 5
+  jumpForce: 10
   secondJumpForce: 10
   rg: {fileID: 739591757}
   sprite: {fileID: 739591755}
-  maxJump: 3
-  canJump: 0
+  maxJump: 2
+  airDrag: 0
   onGround: 0
 --- !u!212 &739591755
 SpriteRenderer:
@@ -876,7 +876,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 3
-  m_LinearDrag: 2
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
