@@ -11,7 +11,6 @@ public class SpottedEnemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-
             chaseEnemy.Chase();
         }
     }

@@ -8,6 +8,9 @@ TagManager:
   - ceiling
   - border
   - weapon
+  - Shooter
+  - Enemy
+  - egg
   layers:
   - Default
   - TransparentFX

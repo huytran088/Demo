@@ -9,20 +9,31 @@ public class Target : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private Transform enemy;
 
+    [SerializeField] private EnemyStats stats;
+
     [SerializeField] private bool flipable;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("weapon"))
         {
-            _animator.SetTrigger("hit");
+
+            if (tag == "egg")
+            {
+                _animator.SetTrigger("hit");
+            }
+
+            else
+            {
+                stats.currentHealth -= Stats.instance.currentDmg;
+            }
 
             if (flipable)
             {
                 if (player.position.x < enemy.position.x)
                 {
                     Vector3 enemyDirection = enemy.localScale;
-                    enemy.localScale = new Vector3(enemyDirection.x, enemyDirection.y, enemyDirection.z);
+                    enemy.localScale = new Vector3(-enemyDirection.x, enemyDirection.y, enemyDirection.z);
                 }
                 else if (player.position.x > enemy.position.x)
                 {

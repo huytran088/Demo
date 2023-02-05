@@ -20,7 +20,7 @@ public class Stats : MonoBehaviour
     {
         instance = this;
         Health = MaxHealth;
-      
+        currentDmg = Dmg;
     }
 
     // Update is called once per frame
@@ -35,5 +35,15 @@ public class Stats : MonoBehaviour
     void Die()
     {
         Destroy(gameObject);
+    }
+
+    public void Evolve()
+    {
+        MaxHealth *= 10;
+        Dmg *= 10;
+
+        Health *= 10;
+        currentDmg *= 10;
+
     }
 }

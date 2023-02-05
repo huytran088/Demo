@@ -31,5 +31,10 @@ public class Honey : MonoBehaviour
             timeSustained += Time.deltaTime;
 
         }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            collision.gameObject.GetComponent<EnemyStats>().currentHealth -= damage * Time.deltaTime;
+        }
     }
 }

@@ -33,13 +33,15 @@ public class ChaseTarget : MonoBehaviour
     public void TurnOffHitbox()
     {
         attackHitbox.enabled = false;
+        _animator.SetBool("isAttacking", false);
     }
+
 
     public void Chase()
     {
         if (Mathf.Abs(player.position.x -  transform.position.x) > attackRadius)
         {
-  
+            Debug.Log("Applying " + (player.position - transform.position) *chaseForce * Time.deltaTime);
             rb.AddForce((player.position - transform.position) * chaseForce * Time.deltaTime);
         }
         else
