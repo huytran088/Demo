@@ -52,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
         // Horizontal force
         if (onGround)
         {
+            //Debug.Log("Hello");
             rg.AddForce(horizontalInput * speed * Vector2.right, ForceMode2D.Force);
             if (rg.velocity.magnitude > maxVelocity)
             {
