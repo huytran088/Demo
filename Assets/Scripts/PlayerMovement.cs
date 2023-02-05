@@ -10,7 +10,8 @@ public class PlayerMovement : MonoBehaviour
     //Animation
     [SerializeField] private Animator _animator;
     private int _movingHash;
-    
+    private int _attackHash;
+
     // private instances
     [SerializeField] private float speed;
     [SerializeField] private float maxVelocity;
@@ -20,6 +21,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rg;
     [SerializeField] private SpriteRenderer sprite;
 
+    //attack zone
+    [SerializeField] private Collider2D attackZone;
+
     // Boolean to keep track of double jump availability
     [SerializeField] private int maxJump;
     [SerializeField] private float airDrag;
@@ -28,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Player's width and height
     private int currentJump;
+    private bool canMove;
 
     // Start is called before the first frame update
     void Start()
@@ -36,11 +41,35 @@ public class PlayerMovement : MonoBehaviour
         rg = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         _movingHash = Animator.StringToHash("moving");
+        _attackHash = Animator.StringToHash("isAttacking");
+        canMove = true;
     }
 
     void Update()
     {
         Move();
+        Attack();
+    }
+
+    private void Attack()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !_animator.GetBool(_attackHash))
+        {
+            canMove = false;
+            _animator.SetBool(_attackHash, true);
+        }
+    }
+
+    public void StopAttack()
+    {
+        _animator.SetBool(_attackHash, false);
+        canMove = true;
+        attackZone.enabled = true;
+    }
+
+    public void TurnOffHitbox()
+    {
+        attackZone.enabled = false;
     }
 
     private void Move()
@@ -50,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
         // -1 to +1
 
         // Horizontal force
-        if (onGround)
+        if (onGround && canMove)
         {
             //Debug.Log("Hello");
             rg.AddForce(horizontalInput * speed * Vector2.right, ForceMode2D.Force);
@@ -60,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (horizontalInput != 0 && onGround)
+        if (horizontalInput != 0 && onGround && canMove)
         {
             _animator.SetBool(_movingHash, true);
         }
@@ -68,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _animator.SetBool(_movingHash, false);
         }
-        
+
         // if (!onGround)
         // {
         //     rg.AddForce(horizontalInput * airDrag * Vector2.left, ForceMode2D.Force);
@@ -77,11 +106,12 @@ public class PlayerMovement : MonoBehaviour
         // Flip Sprite
         if (horizontalInput < 0)
         {
-            sprite.flipX = true;
+            //sprite.flipX = true;
+            transform.localScale = new Vector3(-1, 1, 1);
         }
         else if (horizontalInput > 0)
         {
-            sprite.flipX = false;
+            transform.localScale = new Vector3(1, 1, 1);
         }
 
         // Jump && Double Jump
@@ -90,22 +120,22 @@ public class PlayerMovement : MonoBehaviour
             // If the player is on the ground
             currentJump = maxJump;
             currentJump--;
-            
+
             //jump with airdrag
             rg.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
             onGround = false;
 
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && currentJump >  0 && !onGround)
+        else if (Input.GetKeyDown(KeyCode.Space) && currentJump > 0 && !onGround)
         {
             // Reset the player's velocity
             currentJump--;
-            
+
             //jump with air drag
             rg.AddForce(Vector2.up * secondJumpForce, ForceMode2D.Impulse);
         }
-        
+
         //Land to ground // dragon kick
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -117,11 +147,10 @@ public class PlayerMovement : MonoBehaviour
     {
         onGround = isOnGround;
     }
-    
+
     public void SetGrappling(bool isGrappling)
     {
         grappling = isGrappling;
     }
 }
-    
 

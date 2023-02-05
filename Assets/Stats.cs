@@ -12,6 +12,7 @@ public class Stats : MonoBehaviour
 
     [SerializeField] private bool isAlive;
 
+    public bool obtainedHoney;
     public static Stats instance;
 
     // Start is called before the first frame update
